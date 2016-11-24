@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="Wolves">
+    <file>wolf_icon.png</file>
     <file>bg1.png</file>
     <file>bg2.png</file>
     <file>bg3.png</file>

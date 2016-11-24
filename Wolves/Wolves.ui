@@ -25,6 +25,10 @@
   <property name="windowTitle">
    <string>Wolves</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Wolves.qrc">
+    <normaloff>:/Wolves/wolf_icon.png</normaloff>:/Wolves/wolf_icon.png</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QLabel" name="label">
     <property name="geometry">
@@ -39,7 +43,134 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>:/Wolves/bg1.png</pixmap>
+     <pixmap resource="Wolves.qrc">:/Wolves/bg1.png</pixmap>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>20</y>
+      <width>181</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微软雅黑</family>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>你的身份：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="IDLabel">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>100</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微软雅黑</family>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>无</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="situLabel">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>160</y>
+      <width>131</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微软雅黑</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>游戏未开始</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="startButton">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>310</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微软雅黑</family>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>游戏开始</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>30</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微软雅黑</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>当前玩家</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="playerLabel">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>80</y>
+      <width>151</width>
+      <height>231</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="infoLabel">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>50</y>
+      <width>131</width>
+      <height>221</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微软雅黑</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>
@@ -63,7 +194,39 @@
     <addaction name="actionBackground5"/>
     <addaction name="actionBackground6"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>聊天框</string>
+    </property>
+    <addaction name="actionAll"/>
+    <addaction name="actionWolves"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>房间</string>
+    </property>
+    <addaction name="actionCreate"/>
+    <addaction name="actionAdd"/>
+   </widget>
+   <widget class="QMenu" name="menu_4">
+    <property name="title">
+     <string>信息</string>
+    </property>
+    <addaction name="actionVersion"/>
+    <addaction name="actionAuthor"/>
+   </widget>
+   <widget class="QMenu" name="menu_5">
+    <property name="title">
+     <string>其他</string>
+    </property>
+    <addaction name="actionVoter"/>
+    <addaction name="actionName"/>
+   </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
+   <addaction name="menu_3"/>
+   <addaction name="menu_4"/>
+   <addaction name="menu_5"/>
   </widget>
   <action name="actionBackground1">
    <property name="text">
@@ -93,6 +256,46 @@
   <action name="actionBackground6">
    <property name="text">
     <string>background6</string>
+   </property>
+  </action>
+  <action name="actionAll">
+   <property name="text">
+    <string>All</string>
+   </property>
+  </action>
+  <action name="actionWolves">
+   <property name="text">
+    <string>Wolves</string>
+   </property>
+  </action>
+  <action name="actionCreate">
+   <property name="text">
+    <string>Create</string>
+   </property>
+  </action>
+  <action name="actionAdd">
+   <property name="text">
+    <string>Add</string>
+   </property>
+  </action>
+  <action name="actionVersion">
+   <property name="text">
+    <string>Version</string>
+   </property>
+  </action>
+  <action name="actionAuthor">
+   <property name="text">
+    <string>Author</string>
+   </property>
+  </action>
+  <action name="actionVoter">
+   <property name="text">
+    <string>Voter</string>
+   </property>
+  </action>
+  <action name="actionName">
+   <property name="text">
+    <string>Name</string>
    </property>
   </action>
  </widget>
