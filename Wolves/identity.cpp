@@ -103,3 +103,8 @@ void identity::setOfficer()
 {
 	officer = true;
 }
+
+id_type identity::getID()
+{
+	return t;
+}

@@ -9,6 +9,8 @@
 #include <QtNetwork\QNetworkInterface>
 #include <QList>
 #include <QSignalMapper>
+#include <cstdlib>
+#include <ctime>
 #include "ui_Wolves.h"
 #include "chatDialog.h"
 #include "voter.h"
@@ -43,7 +45,9 @@ private:
 	int selfNumber;
 	QString name;
 	player p[15];
+	int vote_result[16];
 	int connectNumber;
+	id_type id_player[15];
 	QString findAddress();
 signals:
 	void someoneDied();
@@ -62,10 +66,12 @@ public slots:
 	void changeBackground6();
 	void showAuthorInfo();
 	void receiveInfo();
+	void newGame();
+	void serverInfo(int index);
 	void showVersionInfo();
 	void callCommonChat();
 	void callWolfChat();
 	void showPlayer();
 public:
-
+	void outputIdentity();
 };

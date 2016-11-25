@@ -5,10 +5,14 @@ Wolves::Wolves(QWidget *parent)
 {
 	ui.setupUi(this);
 	server = nullptr;
+	mapper = new QSignalMapper;
 	connectNumber = 0;
 	selfNumber = -1;
 	for (int i = 0; i < 15; ++i)
+	{
+		vote_result[i] = 0;
 		WriteReadSocket[i] = nullptr;
+	}
 	isServer = false;
 	gameStart = false;
 	ui.startButton->hide();
@@ -21,6 +25,7 @@ Wolves::Wolves(QWidget *parent)
 	connect(ui.actionBackground6, SIGNAL(triggered()), this, SLOT(changeBackground6()));
 	connect(ui.actionAuthor, SIGNAL(triggered()), this, SLOT(showAuthorInfo()));
 	connect(ui.actionVersion, SIGNAL(triggered()), this, SLOT(showVersionInfo()));
+	connect(mapper, SIGNAL(mapped(int)), this, SLOT(serverInfo(int)));
 	commonChat = new chatDialog(this);
 	commonChat->setWindowTitle(u8"È«ÌåÁÄÌìÆ÷");
 	wolfChat = new chatDialog(this);
@@ -44,6 +49,7 @@ Wolves::Wolves(QWidget *parent)
 	connect(createServer, SIGNAL(okClicked()), this, SLOT(setServer()));
 	connect(addServer, SIGNAL(okClicked()), this, SLOT(connectToServer()));
 	connect(this, SIGNAL(newOneJoin()), this, SLOT(showPlayer()));
+	connect(ui.startButton, SIGNAL(clicked()), this, SLOT(newGame()));
 }
 
 void Wolves::changeBackground1()

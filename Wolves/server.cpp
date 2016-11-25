@@ -2,8 +2,23 @@
 
 void Wolves::setServer()
 {
-	if (gameStart || isServer)
+	if (gameStart || isServer || connectNumber != 0)
 		return;
+	id_player[0] = id_seer;
+	id_player[1] = id_guard;
+	id_player[2] = id_witch;
+	id_player[3] = id_wolf;
+	id_player[4] = id_wolf;
+	id_player[5] = id_villager;
+	id_player[6] = id_villager;
+	id_player[7] = id_villager;
+	id_player[8] = id_wolf;
+	id_player[9] = id_hunter;
+	id_player[10] = id_cupit;
+	id_player[11] = id_wolf;
+	id_player[12] = id_villager;
+	id_player[13] = id_villager;
+	id_player[14] = id_villager;
 	server = new QTcpServer;
 	QString pt = createServer->getPort();
 	server->listen(QHostAddress::Any, pt.toInt());
@@ -20,6 +35,9 @@ void Wolves::acceptConnection()
 	if (connectNumber >= 15)
 		return;
 	WriteReadSocket[connectNumber] = server->nextPendingConnection();
+	connect(WriteReadSocket[connectNumber], SIGNAL(readyRead()), mapper, SLOT(map()));
+	mapper->setMapping(WriteReadSocket[connectNumber], connectNumber);
+
 	if (connectNumber != 0)
 	{
 		WriteReadSocket[connectNumber]->write(QString::number(connectNumber + 1).toUtf8());
@@ -63,4 +81,56 @@ QString Wolves::findAddress()
 	if (ipAddress.isEmpty())
 		ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
 	return ipAddress;
+}
+
+void Wolves::serverInfo(int index)
+{
+
+}
+
+void Wolves::newGame()
+{
+	srand(time(NULL));
+	for (int i = connectNumber - 1; i > 0; --i)
+	{
+		int r = rand() % (i + 1);
+		id_type temp;
+		temp = id_player[r];
+		id_player[r] = id_player[i];
+		id_player[i] = temp;
+	}
+	for (int i = 0; i < connectNumber; ++i)
+	{
+		QByteArray a("\\i");
+		a += (QString::number(i) + ' ');
+		switch (id_player[i])
+		{
+		case id_villager:
+			a += QString::number(1);
+			break;
+		case id_wolf:
+			a += QString::number(2);
+			break;
+		case id_seer:
+			a += QString::number(3);
+			break;
+		case id_guard:
+			a += QString::number(4);
+			break;
+		case id_cupit:
+			a += QString::number(5);
+			break;
+		case id_witch:
+			a += QString::number(6);
+			break;
+		case id_hunter:
+			a += QString::number(7);
+			break;
+		default:
+			break;
+		}
+		for (int j = 0; j < connectNumber; ++j)
+			WriteReadSocket[j]->write(a);
+	}
+	ui.startButton->hide();
 }

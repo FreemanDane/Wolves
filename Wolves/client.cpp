@@ -11,6 +11,7 @@ void Wolves::connectToServer()
 	{
 		QByteArray new_info = selfSocket->readAll();
 		connectNumber = new_info.toInt();
+		selfNumber = connectNumber - 1;
 		connect(selfSocket, SIGNAL(readyRead()), this, SLOT(receiveInfo()));
 		selfSocket->write(name.toUtf8());
 	}
@@ -95,6 +96,8 @@ void Wolves::receiveInfo()
 			default:
 				break;
 			}
+			if (p[selfNumber].id != nullptr)
+				outputIdentity();
 		}
 		else if (new_info[0] == 'w')
 		{
@@ -123,4 +126,32 @@ void Wolves::showPlayer()
 		a += (QString::number(i + 1) + ' ' + p[i].name + "\r\n");
 	}
 	ui.playerLabel->setText(a);
+}
+
+void Wolves::outputIdentity()
+{
+	switch (p[selfNumber].id->getID())
+	{
+	case id_villager:
+		ui.IDLabel->setText(u8"平民");
+		break;
+	case id_wolf:
+		ui.IDLabel->setText(u8"狼人");
+		break;
+	case id_seer:
+		ui.IDLabel->setText(u8"预言家");
+		break;
+	case id_witch:
+		ui.IDLabel->setText(u8"女巫");
+		break;
+	case id_hunter:
+		ui.IDLabel->setText(u8"猎人");
+		break;
+	case id_guard:
+		ui.IDLabel->setText(u8"守卫");
+		break;
+	case id_cupit:
+		ui.IDLabel->setText(u8"丘比特");
+		break;
+	}
 }
