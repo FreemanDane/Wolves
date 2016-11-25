@@ -46,6 +46,7 @@ public slots:
 	void setName();
 	void setServer();
 	void connectToServer();
+	void acceptConnection();
 	void changeBackground1();
 	void changeBackground2();
 	void changeBackground3();

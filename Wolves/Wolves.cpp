@@ -6,6 +6,7 @@ Wolves::Wolves(QWidget *parent)
 	ui.setupUi(this);
 	server = nullptr;
 	connectNumber = 0;
+	selfNumber = -1;
 	for (int i = 0; i < 15; ++i)
 		WriteReadSocket[i] = nullptr;
 	isServer = false;
@@ -120,7 +121,7 @@ void Wolves::setServer()
 	server = new QTcpServer;
 	QString pt = createServer->getPort();
 	server->listen(QHostAddress::Any, pt.toInt());
-	connect(server, SIGNAL(newConnection()), this, SLOT(connectToServer()));
+	connect(server, SIGNAL(newConnection()), this, SLOT(acceptConnection()));
 	selfSocket = new QTcpSocket;
 	selfSocket->connectToHost(createServer->getIP(), pt.toInt());
 }
@@ -128,6 +129,27 @@ void Wolves::setServer()
 void Wolves::connectToServer()
 {
 	
+}
+
+void Wolves::acceptConnection()
+{
+	if (connectNumber >= 15)
+		return;
+	WriteReadSocket[connectNumber] = server->nextPendingConnection();
+	WriteReadSocket[connectNumber]->waitForReadyRead();
+	QByteArray new_player = WriteReadSocket[connectNumber]->read(200);
+	p[connectNumber].name = new_player;
+	connectNumber++;
+	QByteArray playerNumber = "p";
+	playerNumber += playerNumber.number(connectNumber);
+	for (int i = 0; i < connectNumber; ++i)
+	{
+		WriteReadSocket[i]->write(playerNumber);
+		for (int j = 0; j < connectNumber; ++j)
+		{
+			WriteReadSocket[i]->write((QString::number(j) + " " + p[j].name).toUtf8());
+		}
+	}
 }
 
 void Wolves::setName()
