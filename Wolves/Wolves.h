@@ -8,6 +8,7 @@
 #include <QByteArray>
 #include <QtNetwork\QNetworkInterface>
 #include <QList>
+#include <QSignalMapper>
 #include "ui_Wolves.h"
 #include "chatDialog.h"
 #include "voter.h"
@@ -35,6 +36,7 @@ private:
 	QTcpServer *server;
 	QTcpSocket *WriteReadSocket[15];
 	QTcpSocket *selfSocket;
+	QSignalMapper *mapper;
 	progress *pro;
 	bool isServer;
 	bool gameStart;

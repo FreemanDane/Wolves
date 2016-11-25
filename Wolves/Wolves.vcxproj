@@ -69,6 +69,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="chatDialog.cpp" />
+    <ClCompile Include="client.cpp" />
     <ClCompile Include="createServerDialog.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_chatDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -106,6 +107,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="nameInput.cpp" />
     <ClCompile Include="progress.cpp" />
+    <ClCompile Include="server.cpp" />
     <ClCompile Include="voter.cpp" />
     <ClCompile Include="Wolves.cpp" />
   </ItemGroup>
