@@ -122,13 +122,41 @@ void Wolves::setServer()
 	QString pt = createServer->getPort();
 	server->listen(QHostAddress::Any, pt.toInt());
 	connect(server, SIGNAL(newConnection()), this, SLOT(acceptConnection()));
+	isServer = true;
 	selfSocket = new QTcpSocket;
 	selfSocket->connectToHost(createServer->getIP(), pt.toInt());
 }
 
 void Wolves::connectToServer()
 {
-	
+	if (selfSocket == nullptr)
+		return;
+	selfSocket = new QTcpSocket;
+	selfSocket->connectToHost(addServer->getIP(), addServer->getPort().toInt());
+	if (selfSocket->waitForConnected())
+	{
+		selfSocket->write(name.toUtf8());
+	}
+	else
+	{
+		QMessageBox::warning(this, u8"连接错误", u8"不能连接到服务器", QMessageBox::Ok);
+	}
+}
+
+void Wolves::receiveInfo()
+{
+	QByteArray new_info = selfSocket->readAll();
+	if (new_info[0] >= '0' && new_info[0] <= '9')
+	{
+		int last_index = new_info.indexOf(' ');
+		QByteArray a = new_info.left(last_index);
+		p[a.toInt()].name = new_info.remove(0, last_index + 1);
+		emit newOneJoin();
+	}
+	else if (new_info[0] == 'p')
+	{
+		connectNumber = new_info.remove(0, 1).toInt();
+	}
 }
 
 void Wolves::acceptConnection()

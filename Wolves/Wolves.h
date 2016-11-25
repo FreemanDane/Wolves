@@ -42,6 +42,10 @@ private:
 	player p[15];
 	int connectNumber;
 	QString findAddress();
+signals:
+	void someoneDied();
+	void newOneJoin();
+
 public slots:
 	void setName();
 	void setServer();
@@ -54,6 +58,7 @@ public slots:
 	void changeBackground5();
 	void changeBackground6();
 	void showAuthorInfo();
+	void receiveInfo();
 	void showVersionInfo();
 	void callCommonChat();
 	void callWolfChat();
