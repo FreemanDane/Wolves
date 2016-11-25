@@ -34,6 +34,7 @@ private:
 	CreateServerDialog *addServer;
 	QTcpServer *server;
 	QTcpSocket *WriteReadSocket[15];
+	QTcpSocket *selfSocket;
 	bool isServer;
 	bool gameStart;
 	int selfNumber;
@@ -42,6 +43,7 @@ private:
 	int connectNumber;
 	QString findAddress();
 public slots:
+	void setName();
 	void setServer();
 	void connectToServer();
 	void changeBackground1();

@@ -11,6 +11,7 @@ Wolves::Wolves(QWidget *parent)
 	isServer = false;
 	gameStart = false;
 	ui.startButton->hide();
+	name = "default";
 	connect(ui.actionBackground1, SIGNAL(triggered()), this, SLOT(changeBackground1()));
 	connect(ui.actionBackground2, SIGNAL(triggered()), this, SLOT(changeBackground2()));
 	connect(ui.actionBackground3, SIGNAL(triggered()), this, SLOT(changeBackground3()));
@@ -38,6 +39,7 @@ Wolves::Wolves(QWidget *parent)
 	connect(ui.actionAdd, SIGNAL(triggered()), addServer, SLOT(show()));
 	connect(ui.actionVoter, SIGNAL(triggered()), voteDialog, SLOT(show()));
 	connect(ui.actionName, SIGNAL(triggered()), nameDialog, SLOT(show()));
+	connect(nameDialog, SIGNAL(okClicked()), this, SLOT(setName()));
 }
 
 void Wolves::changeBackground1()
@@ -119,9 +121,16 @@ void Wolves::setServer()
 	QString pt = createServer->getPort();
 	server->listen(QHostAddress::Any, pt.toInt());
 	connect(server, SIGNAL(newConnection()), this, SLOT(connectToServer()));
+	selfSocket = new QTcpSocket;
+	selfSocket->connectToHost(createServer->getIP(), pt.toInt());
 }
 
 void Wolves::connectToServer()
 {
+	
+}
 
+void Wolves::setName()
+{
+	name = nameDialog->getName();
 }
