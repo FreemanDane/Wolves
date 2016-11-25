@@ -1,9 +1,13 @@
 #pragma once
+#include <QObject>
 
 const int numOfProgress = 8;
 
-class progress
+class progress : public QObject
 {
+	Q_OBJECT
+
+private:
 	int day;
 	int time;
 public:

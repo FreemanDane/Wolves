@@ -7,6 +7,7 @@ identity::identity(id_type new_id)
 	die = false;
 	lastBeProtected = 50;
 	lover = false;
+	officer = false;
 	life = 1;
 	if (t == id_witch)
 	{
@@ -91,4 +92,14 @@ void identity::BeHurted()
 void identity::BeSaved()
 {
 	life++;
+}
+
+bool identity::getOfficer()
+{
+	return officer;
+}
+
+void identity::setOfficer()
+{
+	officer = true;
 }

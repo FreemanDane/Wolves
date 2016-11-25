@@ -19,6 +19,7 @@ protected:
 	bool die;
 	int lastBeProtected;
 	bool lover;
+	bool officer;
 	bool poison;
 	bool medicion;
 	int life;
@@ -39,4 +40,6 @@ public:
 	int getLife();
 	void BeHurted();
 	void BeSaved();
+	bool getOfficer();
+	void setOfficer();
 };

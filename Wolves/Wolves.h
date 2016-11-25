@@ -35,6 +35,7 @@ private:
 	QTcpServer *server;
 	QTcpSocket *WriteReadSocket[15];
 	QTcpSocket *selfSocket;
+	progress *pro;
 	bool isServer;
 	bool gameStart;
 	int selfNumber;
@@ -62,4 +63,7 @@ public slots:
 	void showVersionInfo();
 	void callCommonChat();
 	void callWolfChat();
+	void showPlayer();
+public:
+
 };
