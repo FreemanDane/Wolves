@@ -43,6 +43,7 @@ private:
 	bool isServer;
 	bool gameStart;
 	int selfNumber;
+	int has_vote;
 	QString name;
 	player p[15];
 	int vote_result[16];

@@ -33,8 +33,13 @@ void Wolves::protectPeople()
 
 void Wolves::vote()
 {
+	if (p[selfNumber].id->beDead())
+	{
+		selfSocket->write((QString("\\k") + QString::number(selfNumber) + " -1").toUtf8());
+		return;
+	}
 	int result = voteDialog->getChosen();
-	selfSocket->write((QString("\\v") + QString::number(result)).toUtf8());
+	selfSocket->write((QString("\\k") + QString::number(selfNumber) + ' ' + QString::number(result)).toUtf8());
 }
 
 void Wolves::killPerson()

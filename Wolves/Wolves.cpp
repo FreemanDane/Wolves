@@ -6,6 +6,7 @@ Wolves::Wolves(QWidget *parent)
 	ui.setupUi(this);
 	server = nullptr;
 	mapper = new QSignalMapper;
+	has_vote = 0;
 	connectNumber = 0;
 	selfNumber = -1;
 	for (int i = 0; i < 15; ++i)

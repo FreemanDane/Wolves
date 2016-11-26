@@ -112,12 +112,80 @@ void Wolves::serverInfo(int infoNumber)
 				WriteReadSocket[i]->write(a);
 			}
 		}
-		if (new_info[0] == 'v')
+		else if (new_info[0] == 'k')
 		{
 			new_info.remove(0, 1);
+			int mid_index = new_info.indexOf(' ');
+			int num = new_info.left(mid_index).toInt();
+			int vote_tg = new_info.remove(0, mid_index + 1).toInt();
+			has_vote++;
+			if (vote_tg == -1)
+			{
+				vote_result[15]++;
+			}
+			else
+			{
+				if (p[num].id->getOfficer())
+				{
+					vote_result[vote_tg] += 2;
+				}
+				else
+				{
+					vote_result[vote_tg]++;
+				}
+			}
+			if (has_vote == connectNumber)
+			{
+				int max_index = -1;
+				int max_get = 0;
+				for (int i = 0; i < connectNumber; ++i)
+				{
+					if (vote_result[i] > max_get)
+					{
+						max_get = vote_result[i];
+						max_index = i;
+					}
+				}
+				for (int i = 0; i < connectNumber; ++i)
+				{
+					WriteReadSocket[i]->write((QString("\\e") + QString::number(max_index)).toUtf8());
+					vote_result[i] = 0;
+				}
+				has_vote = 0;
+			}
+		}
+		else if (new_info[0] == 'v')
+		{
+			new_info.remove(0, 1);
+			int vote_target = new_info.toInt();
+			has_vote++;
+			if (vote_target == -1)
+				vote_result[15]++;
+			else
+			{
+				vote_result[vote_target]++;
+			}
+			if (has_vote == connectNumber)
+			{
+				int max_index = -1;
+				int max_get = 0;
+				for (int i = 0; i < connectNumber; ++i)
+				{
+					if (vote_result[i] > max_get)
+					{
+						max_get = vote_result[i];
+						max_index = i;
+					}
+				}
+				for (int i = 0; i < connectNumber; ++i)
+				{
+					WriteReadSocket[i]->write((QString("\\e") + QString::number(max_index)).toUtf8());
+					vote_result[i] = 0;
+				}
+				has_vote = 0;
+			}
 		}
 	}
-
 }
 
 void Wolves::newGame()
