@@ -1,7 +1,7 @@
 #pragma once
 #include <QObject>
 
-const int numOfProgress = 8;
+const int numOfProgress = 6;
 
 class progress : public QObject
 {

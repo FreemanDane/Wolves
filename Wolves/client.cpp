@@ -55,7 +55,6 @@ void Wolves::receiveInfo()
 		{
 			int index = new_info.remove(0, 1).toInt();
 			p[index].id->BeHurted();
-			pro->timeGoOn();
 		}
 		else if (new_info[0] == 's')
 		{
@@ -117,14 +116,138 @@ void Wolves::receiveInfo()
 		}
 		else if (new_info[0] == 'e')
 		{
-			pro->timeGoOn();
+			new_info.remove(0, 1);
+			int number_info = new_info.toInt();
 			if (pro->getDay() == 0)
 			{
-
+				if (pro->getTime() == 0)
+				{
+					p[number_info].id->setOfficer();
+					pro->timeGoOn();
+					ui.infoLabel->setText(p[number_info].name + u8"是警长");
+					emit timeToSetLover();
+				}
+				else if (pro->getTime() == 1 && pro->getTime() == 2)
+				{
+					if (number_info != -1)
+						p[number_info].id->setLover();
+					if (pro->getTime() == 2 && p[selfNumber].id->getLover())
+					{
+						QString lover_info = "";
+						for (int i = 0; i < connectNumber; ++i)
+						{
+							if (p[i].id->getLover())
+								lover_info += p[i].name + "\r\n";
+						}
+						lover_info += u8"是情侣\r\n等待预言家验身份";
+						ui.infoLabel->setText(lover_info);
+					}
+					else
+					{
+						ui.infoLabel->setText(u8"你没有被设置为情侣\r\n等待预言家验身份");
+					}
+					pro->timeGoOn();
+					emit timeToSeer();
+				}
 			}
 			else
 			{
-
+				if (pro->getTime() == 0)
+				{
+					pro->timeGoOn();
+					ui.infoLabel->setText(u8"等待守卫保护人");
+					emit protectPeople();
+				}
+				else if (pro->getTime() == 1)
+				{
+					for (int i = 0; i < connectNumber; ++i)
+					{
+						p[i].id->cancelProtected();
+					}
+					if (number_info != -1)
+					{
+						p[number_info].id->beProtected();
+					}
+					pro->timeGoOn();
+					ui.infoLabel->setText(u8"狼人杀人中");
+					emit timeToWolves();
+				}
+				else if (pro->getTime() == 2)
+				{
+					if (number_info != -1)
+					{
+						p[number_info].id->BeHurted();
+					}
+					pro->timeGoOn();
+					ui.infoLabel->setText(u8"女巫用药中");
+					emit timeToSavePerson();
+				}
+				else if (pro->getTime() == 3)
+				{
+					if (number_info != -1)
+					{
+						p[number_info].id->BeHurted();
+						for (int i = 0; i < connectNumber; ++i)
+						{
+							if (p[i].id->getID() == id_witch)
+							{
+								p[i].id->usePoison();
+								break;
+							}
+						}
+						pro->timeGoOn();
+						emit timeToPoisonPerson();
+					}
+				}
+				else if (pro->getTime() == 4)
+				{
+					if (number_info != -1)
+					{
+						p[number_info].id->BeSaved();
+						for (int i = 0; i < connectNumber; ++i)
+						{
+							if (p[i].id->getID() == id_witch)
+							{
+								p[i].id->useMedicion();
+								break;
+							}
+						}
+						pro->timeGoOn();
+						emit timeToTheDead();
+					}
+				}
+				else if (pro->getTime() == 5)
+				{
+					QString deadList = "";
+					for (int i = 0; i < connectNumber; ++i)
+					{
+						if (p[i].id->getLife() <= 0 && !p[i].id->beDead())
+						{
+							deadList += (p[i].name + u8"死亡\r\n");
+							p[i].id->goDie();
+							if (i == selfNumber)
+							{
+								ui.situLabel->setText(u8"死亡");
+							}
+						}
+					}
+					deadList += u8"请投票";
+					ui.infoLabel->setText(deadList);
+					pro->timeGoOn();
+					emit timeToVote();
+				}
+				else if (pro->getTime() == 6)
+				{
+					if (number_info != -1)
+					{
+						p[number_info].id->goDie();
+					}
+					if (selfNumber == number_info)
+						ui.situLabel->setText(u8"死亡");
+					ui.infoLabel->setText(p[number_info].name + u8"被投死");
+					pro->timeGoOn();
+					emit timeToSeer();
+				}
 			}
 		}
 	}
@@ -170,6 +293,12 @@ void Wolves::outputIdentity()
 		break;
 	}
 	ui.situLabel->setText(status);
+	for (int i = 0; i < connectNumber; ++i)
+	{
+		voteDialog->setUsabel(i);
+	}
+	voteDialog->canGiveUp(true);
+	selectOfficer();
 }
 
 void Wolves::allChatSend()

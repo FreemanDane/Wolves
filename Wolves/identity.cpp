@@ -36,6 +36,7 @@ void identity::beProtected()
 
 void identity::cancelProtected()
 {
+	timeGoOn();
 	protection = false;
 }
 
@@ -79,6 +80,11 @@ bool identity::getLover()
 	return lover;
 }
 
+void identity::setLover()
+{
+	lover = true;
+}
+
 int identity::getLife()
 {
 	return life;
@@ -107,4 +113,9 @@ void identity::setOfficer()
 id_type identity::getID()
 {
 	return t;
+}
+
+void identity::goDie()
+{
+	die = true;
 }

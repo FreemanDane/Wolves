@@ -22,7 +22,7 @@ void progress::timeGoOn()
 {
 	if (day == 0)
 	{
-		if (time == 3)
+		if (time == 2)
 		{
 			day = 1;
 			time = 0;

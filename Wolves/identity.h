@@ -31,6 +31,7 @@ public:
 	void beProtected();
 	void cancelProtected();
 	bool beDead();
+	void goDie();
 	int getLastBeProtected();
 	void timeGoOn();
 	bool getPoison();
@@ -38,6 +39,7 @@ public:
 	bool getMedicion();
 	void useMedicion();
 	bool getLover();
+	void setLover();
 	int getLife();
 	void BeHurted();
 	void BeSaved();
