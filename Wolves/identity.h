@@ -8,7 +8,8 @@ enum id_type
 	id_guard,
 	id_cupit,
 	id_witch,
-	id_hunter
+	id_hunter,
+	id_null
 };
 
 class identity

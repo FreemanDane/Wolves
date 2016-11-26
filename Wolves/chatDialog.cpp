@@ -12,8 +12,6 @@ chatDialog::chatDialog(QWidget *parent) :QDialog(parent = nullptr)
 	sendButton->setText(u8"·¢ËÍ");
 	showEdit->setReadOnly(true);
 	connect(sendButton, SIGNAL(clicked()), this, SIGNAL(clickSend()));
-	connect(sendButton, SIGNAL(clicked()), this, SLOT(getInput()));
-	connect(inputEdit, SIGNAL(returnPressed()), this, SLOT(getInput()));
 }
 
 chatDialog::~chatDialog()
@@ -27,7 +25,6 @@ chatDialog::~chatDialog()
 QString chatDialog::getInput()
 {
 	QString a = inputEdit->text();
-	showEdit->append(a);
 	inputEdit->setText("");
 	return a;
 }

@@ -115,6 +115,18 @@ void Wolves::receiveInfo()
 			new_info.remove(0, index + 1);
 			commonChat->addNewMessage(p[source].name + ':' + new_info);
 		}
+		else if (new_info[0] == 'e')
+		{
+			pro->timeGoOn();
+			if (pro->getDay() == 0)
+			{
+
+			}
+			else
+			{
+
+			}
+		}
 	}
 }
 
@@ -130,6 +142,8 @@ void Wolves::showPlayer()
 
 void Wolves::outputIdentity()
 {
+	pro = new progress;
+	QString status = u8"存活";
 	switch (p[selfNumber].id->getID())
 	{
 	case id_villager:
@@ -143,6 +157,7 @@ void Wolves::outputIdentity()
 		break;
 	case id_witch:
 		ui.IDLabel->setText(u8"女巫");
+		status += u8"\r\n毒药:是\r\n解药:是";
 		break;
 	case id_hunter:
 		ui.IDLabel->setText(u8"猎人");
@@ -154,4 +169,17 @@ void Wolves::outputIdentity()
 		ui.IDLabel->setText(u8"丘比特");
 		break;
 	}
+	ui.situLabel->setText(status);
+}
+
+void Wolves::allChatSend()
+{
+	QString info = QString("\\a") + QString::number(selfNumber) + QString(' ') + commonChat->getInput();
+	selfSocket->write(info.toUtf8());
+}
+
+void Wolves::wolvesChatSend()
+{
+	QString info = QString("\\w") + QString::number(selfNumber) + QString(' ') + wolfChat->getInput();
+	selfSocket->write(info.toUtf8());
 }

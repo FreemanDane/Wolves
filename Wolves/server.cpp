@@ -35,9 +35,6 @@ void Wolves::acceptConnection()
 	if (connectNumber >= 15)
 		return;
 	WriteReadSocket[connectNumber] = server->nextPendingConnection();
-	connect(WriteReadSocket[connectNumber], SIGNAL(readyRead()), mapper, SLOT(map()));
-	mapper->setMapping(WriteReadSocket[connectNumber], connectNumber);
-
 	if (connectNumber != 0)
 	{
 		WriteReadSocket[connectNumber]->write(QString::number(connectNumber + 1).toUtf8());
@@ -45,6 +42,8 @@ void Wolves::acceptConnection()
 		playerNumber += playerNumber.number(connectNumber + 1);
 		WriteReadSocket[connectNumber]->waitForReadyRead(1000);
 		QByteArray new_player = WriteReadSocket[connectNumber]->readAll();
+		connect(WriteReadSocket[connectNumber], SIGNAL(readyRead()), mapper, SLOT(map()));
+		mapper->setMapping(WriteReadSocket[connectNumber], connectNumber);
 		p[connectNumber].name = new_player;
 		connectNumber++;
 		for (int i = 0; i < connectNumber; ++i)
@@ -58,8 +57,11 @@ void Wolves::acceptConnection()
 	}
 	else
 	{
+		connect(WriteReadSocket[0], SIGNAL(readyRead()), mapper, SLOT(map()));
+		mapper->setMapping(WriteReadSocket[0], connectNumber);
 		p[0].name = name;
 		connectNumber++;
+		selfNumber = 0;
 		showPlayer();
 	}
 }
@@ -83,8 +85,38 @@ QString Wolves::findAddress()
 	return ipAddress;
 }
 
-void Wolves::serverInfo(int index)
+void Wolves::serverInfo(int infoNumber)
 {
+	QByteArray t_info = WriteReadSocket[infoNumber]->readAll();
+	while (t_info.length() != 0)
+	{
+		if (t_info[0] == '\\')
+			t_info.remove(0, 1);
+		int index = t_info.indexOf('\\');
+		QByteArray new_info;
+		if (index != -1)
+		{
+			new_info = t_info.left(index);
+			t_info.remove(0, index);
+		}
+		else
+		{
+			new_info = t_info;
+			t_info.remove(0, t_info.length());
+		}
+		if (new_info[0] == 'a' || new_info[0] == 'w')
+		{
+			QByteArray a = (QString('\\') + new_info).toUtf8();
+			for (int i = 0; i < connectNumber; ++i)
+			{
+				WriteReadSocket[i]->write(a);
+			}
+		}
+		if (new_info[0] == 'v')
+		{
+			new_info.remove(0, 1);
+		}
+	}
 
 }
 

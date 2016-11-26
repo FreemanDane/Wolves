@@ -10,13 +10,16 @@ class voter: public QDialog
 
 private:
 	QRadioButton *target[15];
+	QRadioButton *giveUp;
 	QVBoxLayout *layout;
 	QPushButton *okButton;
 public:
 	voter(QWidget *parent);
 	~voter();
 	void setUsabel(int l);
+	void forbidden();
 	int getChosen();
+	void canGiveUp(bool b = false);
 signals:
 	void okClicked();
 };

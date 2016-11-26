@@ -20,7 +20,19 @@ int progress::getTime()
 
 void progress::timeGoOn()
 {
-	if (time == numOfProgress)
+	if (day == 0)
+	{
+		if (time == 3)
+		{
+			day = 1;
+			time = 0;
+		}
+		else
+		{
+			time++;
+		}
+	}
+	else if (time == numOfProgress)
 	{
 		day++;
 		time = 0;

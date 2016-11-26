@@ -52,6 +52,15 @@ private:
 signals:
 	void someoneDied();
 	void newOneJoin();
+	void timeToOfficer();
+	void timeToSetLover();
+	void timeToProtectPeople();
+	void timeToVote();
+	void timeToWolves();
+	void timeToSavePerson();
+	void timeToPoisonPerson();
+	void timeToTheDead();
+	void timeToSeer();
 
 public slots:
 	void setName();
@@ -72,6 +81,20 @@ public slots:
 	void callCommonChat();
 	void callWolfChat();
 	void showPlayer();
+	void allChatSend();
+	void wolvesChatSend();
+	void selectOfficer();
+	void setLover();
+	void protectPeople();
+	void vote();
+	void killPerson();
+	void savePerson();
+	void poisonPerson();
+	void deadAbility();
+	void seeID();
 public:
 	void outputIdentity();
+	bool examGameOver();
+	void gameOver();
+	void voteInitVoter();
 };

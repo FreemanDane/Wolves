@@ -10,11 +10,15 @@ voter::voter(QWidget *parent) : QDialog(parent)
 	}
 	layout = new QVBoxLayout(this);
 	okButton = new QPushButton(this);
+	giveUp = new QRadioButton(this);
+	giveUp->setText(u8"放弃");
+	giveUp->setEnabled(false);
 	okButton->setText(u8"确定");
 	for (int i = 0; i < 15; ++i)
 	{
 		layout->addWidget(target[i]);
 	}
+	layout->addWidget(giveUp);
 	layout->addWidget(okButton);
 	setWindowTitle(u8"投票器");
 	setGeometry(50, 50, 300, 250);
@@ -44,4 +48,17 @@ int voter::getChosen()
 			return i;
 	}
 	return -1;
+}
+
+void voter::canGiveUp(bool b)
+{
+	giveUp->setEnabled(b);
+}
+
+void voter::forbidden()
+{
+	for (int i = 0; i < 15; ++i)
+	{
+		target[i]->setEnabled(false);
+	}
 }

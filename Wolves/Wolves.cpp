@@ -41,6 +41,8 @@ Wolves::Wolves(QWidget *parent)
 	createServer->setPort("3587");
 	connect(ui.actionAll, SIGNAL(triggered()), this, SLOT(callCommonChat()));
 	connect(ui.actionWolves, SIGNAL(triggered()), this, SLOT(callWolfChat()));
+	connect(commonChat, SIGNAL(clickSend()), this, SLOT(allChatSend()));
+	connect(wolfChat, SIGNAL(clickSend()), this, SLOT(wolvesChatSend()));
 	connect(ui.actionCreate, SIGNAL(triggered()), createServer, SLOT(show()));
 	connect(ui.actionAdd, SIGNAL(triggered()), addServer, SLOT(show()));
 	connect(ui.actionVoter, SIGNAL(triggered()), voteDialog, SLOT(show()));
@@ -101,10 +103,83 @@ void Wolves::callCommonChat()
 
 void Wolves::callWolfChat()
 {
-	wolfChat->show();
+	if (p[selfNumber].id == nullptr || p[selfNumber].id->getID() == id_wolf)
+		wolfChat->show();
+	else
+		QMessageBox::warning(this, u8"错误", u8"你的身份不能打开狼人聊天", QMessageBox::Ok);
 }
 
 void Wolves::setName()
 {
 	name = nameDialog->getName();
+}
+
+bool Wolves::examGameOver()
+{
+	int person_num = 0;
+	int wolves_num = 0;
+	for (int i = 0; i < connectNumber; ++i)
+	{
+		if (p[i].id->getID() == id_wolf && !p[i].id->beDead())
+			wolves_num++;
+		else if (p[i].id->getID() != id_wolf && !p[i].id->beDead())
+			person_num++;
+	}
+	if (person_num == 0 || wolves_num == 0)
+		return true;
+	else
+		return false;
+}
+
+void Wolves::gameOver()
+{
+	int person_num = 0;
+	int wolves_num = 0;
+	for (int i = 0; i < connectNumber; ++i)
+	{
+		if (p[i].id->getID() == id_wolf && !p[i].id->beDead())
+			wolves_num++;
+		else if (p[i].id->getID() != id_wolf && !p[i].id->beDead())
+			person_num++;
+	}
+	if (p[selfNumber].id->getID() == id_wolf)
+	{
+		if (wolves_num == 0)
+		{
+			ui.infoLabel->setText(u8"你输了");
+		}
+		else
+		{
+			ui.infoLabel->setText(u8"你赢了");
+		}
+	}
+	else
+	{
+		if (person_num == 0)
+		{
+			ui.infoLabel->setText(u8"你输了");
+		}
+		else
+		{
+			ui.infoLabel->setText(u8"你赢了");
+		}
+	}
+	for (int i = 0; i < connectNumber; ++i)
+	{
+		delete p[i].id;
+	}
+	delete pro;
+	if (isServer)
+		ui.startButton->show();
+}
+
+void Wolves::voteInitVoter()
+{
+	for (int i = 0; i < connectNumber; ++i)
+	{
+		if (!p[i].id->beDead())
+		{
+			voteDialog->setUsabel(i);
+		}
+	}
 }
