@@ -93,6 +93,7 @@ public slots:
 	void poisonPerson();
 	void deadAbility();
 	void seeID();
+	void sendKeyInfo();
 public:
 	void outputIdentity();
 	bool examGameOver();

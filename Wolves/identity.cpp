@@ -119,3 +119,8 @@ void identity::goDie()
 {
 	die = true;
 }
+
+void identity::cancelOfficer()
+{
+	officer = false;
+}

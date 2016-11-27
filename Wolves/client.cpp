@@ -114,6 +114,13 @@ void Wolves::receiveInfo()
 			new_info.remove(0, index + 1);
 			commonChat->addNewMessage(p[source].name + ':' + new_info);
 		}
+		else if (new_info[0] == 'o')
+		{
+			new_info.remove(0, 1);
+			int index = new_info.toInt();
+			p[index].id->setOfficer();
+			showPlayer();
+		}
 		else if (new_info[0] == 'e')
 		{
 			new_info.remove(0, 1);
@@ -125,9 +132,10 @@ void Wolves::receiveInfo()
 					p[number_info].id->setOfficer();
 					pro->timeGoOn();
 					ui.infoLabel->setText(p[number_info].name + u8"是警长");
+					showPlayer();
 					emit timeToSetLover();
 				}
-				else if (pro->getTime() == 1 && pro->getTime() == 2)
+				else if (pro->getTime() == 1 || pro->getTime() == 2)
 				{
 					if (number_info != -1)
 						p[number_info].id->setLover();
@@ -147,7 +155,10 @@ void Wolves::receiveInfo()
 						ui.infoLabel->setText(u8"你没有被设置为情侣\r\n等待预言家验身份");
 					}
 					pro->timeGoOn();
-					emit timeToSeer();
+					if (pro->getTime() == 1)
+						emit timeToSetLover();
+					else
+						emit timeToSeer();
 				}
 			}
 			else
@@ -231,6 +242,7 @@ void Wolves::receiveInfo()
 							}
 						}
 					}
+					showPlayer();
 					deadList += u8"请投票";
 					ui.infoLabel->setText(deadList);
 					pro->timeGoOn();
@@ -244,7 +256,7 @@ void Wolves::receiveInfo()
 					}
 					if (selfNumber == number_info)
 						ui.situLabel->setText(u8"死亡");
-					ui.infoLabel->setText(p[number_info].name + u8"被投死");
+					ui.infoLabel->setText(p[number_info].name + u8"被投死\r\n等待预言家验身份");
 					pro->timeGoOn();
 					emit timeToSeer();
 				}
@@ -256,9 +268,25 @@ void Wolves::receiveInfo()
 void Wolves::showPlayer()
 {
 	QString a = "";
-	for (int i = 0; i < connectNumber; ++i)
+	if (!gameStart)
 	{
-		a += (QString::number(i + 1) + ' ' + p[i].name + "\r\n");
+		for (int i = 0; i < connectNumber; ++i)
+		{
+			a += (QString::number(i + 1) + ' ' + p[i].name + "\r\n");
+		}
+	}
+	else
+	{
+		for (int i = 0; i < connectNumber; ++i)
+		{
+			if (p[i].id->beDead())
+				a += u8"死 ";
+			else
+				a += u8"活 ";
+			if (p[i].id->getOfficer())
+				a += u8"警 ";
+			a += (QString::number(i + 1) + ' ' + p[i].name + "\r\n");
+		}
 	}
 	ui.playerLabel->setText(a);
 }
@@ -267,6 +295,7 @@ void Wolves::outputIdentity()
 {
 	pro = new progress;
 	QString status = u8"存活";
+	gameStart = true;
 	switch (p[selfNumber].id->getID())
 	{
 	case id_villager:
@@ -299,6 +328,8 @@ void Wolves::outputIdentity()
 	}
 	voteDialog->canGiveUp(true);
 	selectOfficer();
+	showPlayer();
+	//pro->timeGoOn();
 }
 
 void Wolves::allChatSend()
@@ -311,4 +342,71 @@ void Wolves::wolvesChatSend()
 {
 	QString info = QString("\\w") + QString::number(selfNumber) + QString(' ') + wolfChat->getInput();
 	selfSocket->write(info.toUtf8());
+}
+
+void Wolves::sendKeyInfo()
+{
+	int result = voteDialog->getChosen();
+	if (pro->getTime() == 6)
+	{
+		selfSocket->write((QString("\\k") + QString::number(selfNumber) + ' ' + QString::number(result)).toUtf8());
+	}
+	else if (pro->getTime() == 5)
+	{
+		if (p[selfNumber].id->getOfficer())
+		{
+			selfSocket->write(QByteArray("\\o") + QString::number(result).toUtf8());
+			selfSocket->waitForReadyRead(1000);
+			selfSocket->write("v-1");
+			p[selfNumber].id->cancelOfficer();
+		}
+		else
+		{
+			selfSocket->write(QByteArray("\\g") + QString::number(result).toUtf8());
+			selfSocket->waitForReadyRead(1000);
+			selfSocket->write("v-1");
+		}
+	}
+	else if (pro->getTime() == 0 && pro->getDay() != 0)
+	{
+		int result = voteDialog->getChosen();
+		if (result == -1)
+		{
+			selfSocket->write("\\e-1");
+			return;
+		}
+		QString a = QString::number(result + 1) + u8"号玩家\r\n";
+		switch (p[result].id->getID())
+		{	
+		case id_villager:
+			a += u8"平民";
+			break;
+		case id_wolf:
+			a += u8"狼人";
+			break;
+		case id_seer:
+			a += u8"预言家";
+			break;
+		case id_witch:
+			a += u8"女巫";
+			break;
+		case id_hunter:
+			a += u8"猎人";
+			break;
+		case id_guard:
+			a += u8"守卫";
+			break;
+		case id_cupit:
+			a += u8"丘比特";
+			break;
+		}
+		ui.situLabel->setText(a);
+		selfSocket->write("v-1");
+	}
+	else
+	{
+		selfSocket->write((QString("\\v") + QString::number(result)).toUtf8());
+	}
+	voteDialog->hide();
+	voteDialog->forbidden();
 }

@@ -8,7 +8,6 @@ void Wolves::selectOfficer()
 	voteDialog->canGiveUp(false);
 	ui.infoLabel->setText(u8"请选择警长");
 	voteDialog->show();
-	
 }
 
 void Wolves::setLover()
@@ -55,8 +54,16 @@ void Wolves::vote()
 		selfSocket->write((QString("\\k") + QString::number(selfNumber) + " -1").toUtf8());
 		return;
 	}
-	int result = voteDialog->getChosen();
-	selfSocket->write((QString("\\k") + QString::number(selfNumber) + ' ' + QString::number(result)).toUtf8());
+	else
+	{
+		voteDialog->forbidden();
+		for (int i = 0; i < connectNumber; ++i)
+		{
+			if (!p[i].id->beDead())
+				voteDialog->setUsabel(i);
+		}
+		voteDialog->show();
+	}
 }
 
 void Wolves::killPerson()
@@ -67,8 +74,13 @@ void Wolves::killPerson()
 	}
 	else
 	{
-		int result = voteDialog->getChosen();
-		selfSocket->write((QString("\\v") + QString::number(result)).toUtf8());
+		voteDialog->forbidden();
+		for (int i = 0; i < connectNumber; ++i)
+		{
+			if (!p[i].id->beDead())
+				voteDialog->setUsabel(i);
+		}
+		voteDialog->show();
 	}
 }
 
@@ -80,12 +92,14 @@ void Wolves::savePerson()
 	}
 	else
 	{
-		int result = voteDialog->getChosen();
-		if (result != -1)
+		voteDialog->forbidden();
+		for (int i = 0; i < connectNumber; ++i)
 		{
-			p[selfNumber].id->useMedicion();
+			if (p[i].id->getLife() <= 0 && !p[selfNumber].id->beDead() && p[selfNumber].id->getMedicion())
+				voteDialog->setUsabel(i);
 		}
-		selfSocket->write((QString("\\v") + QString::number(result)).toUtf8());
+		voteDialog->show();
+		ui.infoLabel->setText(u8"选择救人");
 	}
 }
 
@@ -97,30 +111,64 @@ void Wolves::poisonPerson()
 	}
 	else
 	{
-		int result = voteDialog->getChosen();
-		if (result != -1)
+		voteDialog->forbidden();
+		for (int i = 0; i < connectNumber; ++i)
 		{
-			p[selfNumber].id->usePoison();
+			if (p[i].id->getLife() > 0 && !p[selfNumber].id->beDead() && p[selfNumber].id->getMedicion())
+				voteDialog->setUsabel(i);
 		}
-		selfSocket->write((QString("\\v") + QString::number(result)).toUtf8());
+		voteDialog->show();
+		ui.infoLabel->setText(u8"选择毒人");
 	}
 }
 
 void Wolves::deadAbility()
 {
-	if (!p[selfNumber].id->getLover() || p[selfNumber].id->getID() != id_hunter || !p[selfNumber].id->beDead())
-	{
+	if (p[selfNumber].id->getLife() > 0 || !p[selfNumber].id->beDead() || (p[selfNumber].id->getID() != id_hunter &&
+		!p[selfNumber].id->getLover() && p[selfNumber].id->getOfficer()))
 		selfSocket->write("\\v-1");
-	}
-	else
+	else if (p[selfNumber].id->getID() == id_hunter)
 	{
-		int result = voteDialog->getChosen();
-		selfSocket->write((QString("\\v") + QString::number(result)).toUtf8());
+		voteDialog->forbidden();
+		for (int i = 0; i < connectNumber; ++i)
+		{
+			if (!p[i].id->beDead())
+				voteDialog->setUsabel(i);
+		}
+		ui.situLabel->setText(u8"您死了\r\n选择射击对象");
+		voteDialog->show();
+	}
+	if (p[selfNumber].id->getLover())
+	{
+		for (int i = 0; i < connectNumber; ++i)
+		{
+			if (p[i].id->getLover() && i != selfNumber)
+			{
+				selfSocket->write((QByteArray("\\g") + QString::number(i)).toUtf8());
+				selfSocket->waitForReadyRead(1000);
+			}
+		}
+	}
+	if (p[selfNumber].id->getOfficer())
+	{
+		voteDialog->forbidden();
+		for (int i = 0; i < connectNumber; ++i)
+		{
+			if (!p[i].id->beDead())
+				voteDialog->setUsabel(i);
+		}
+		ui.situLabel->setText(u8"您死了\r\n选择继任警长");
+		voteDialog->show();
 	}
 }
 
 void Wolves::seeID()
 {
+	if (examGameOver())
+	{
+		gameOver();
+		return;
+	}
 	if (p[selfNumber].id->getID() != id_seer)
 	{
 		selfSocket->write("\\v-1");
@@ -132,45 +180,12 @@ void Wolves::seeID()
 		{
 			for (int i = 0; i < connectNumber; ++i)
 			{
-				if (!p[i].id->beDead())
+				if (!p[i].id->beDead() && !p[selfNumber].id->beDead())
 					voteDialog->setUsabel(i);
 			}
 		}
 		voteDialog->canGiveUp(true);
 		ui.infoLabel->setText(u8"选择想查看的玩家");
 		voteDialog->show();
-		//int result = voteDialog->getChosen();
-		//if (result == -1)
-		//{
-		//	selfSocket->write("\\e-1");
-		//	return;
-		//}
-		//QString a = QString::number(result + 1) + u8"号玩家\r\n";
-		//switch (p[result].id->getID())
-		//{	
-		//case id_villager:
-		//	a += u8"平民";
-		//	break;
-		//case id_wolf:
-		//	a += u8"狼人";
-		//	break;
-		//case id_seer:
-		//	a += u8"预言家";
-		//	break;
-		//case id_witch:
-		//	a += u8"女巫";
-		//	break;
-		//case id_hunter:
-		//	a += u8"猎人";
-		//	break;
-		//case id_guard:
-		//	a += u8"守卫";
-		//	break;
-		//case id_cupit:
-		//	a += u8"丘比特";
-		//	break;
-		//}
-		//ui.situLabel->setText(a);
-		//selfSocket->write("\\e-1");
 	}
 }

@@ -112,6 +112,21 @@ void Wolves::serverInfo(int infoNumber)
 				WriteReadSocket[i]->write(a);
 			}
 		}
+		else if (new_info[0] == 'g')
+		{
+			new_info.remove(0, 1);
+			for (int i = 0; i < connectNumber; ++i)
+			{
+				WriteReadSocket[i]->write(QByteArray("\\k") + new_info);
+			}
+		}
+		else if (new_info[0] == 'o')
+		{
+			for (int i = 0; i < connectNumber; ++i)
+			{
+				WriteReadSocket[i]->write(QByteArray("\\") + new_info);
+			}
+		}
 		else if (new_info[0] == 'k')
 		{
 			new_info.remove(0, 1);

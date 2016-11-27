@@ -45,5 +45,6 @@ public:
 	void BeSaved();
 	bool getOfficer();
 	void setOfficer();
+	void cancelOfficer();
 	id_type getID();
 };

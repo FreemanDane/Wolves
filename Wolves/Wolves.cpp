@@ -53,6 +53,16 @@ Wolves::Wolves(QWidget *parent)
 	connect(addServer, SIGNAL(okClicked()), this, SLOT(connectToServer()));
 	connect(this, SIGNAL(newOneJoin()), this, SLOT(showPlayer()));
 	connect(ui.startButton, SIGNAL(clicked()), this, SLOT(newGame()));
+	connect(voteDialog, SIGNAL(okClicked()), this, SLOT(sendKeyInfo()));
+	connect(this, SIGNAL(timeToOfficer()), this, SLOT(selectOfficer()));
+	connect(this, SIGNAL(timeToSetLover()), this, SLOT(setLover()));
+	connect(this, SIGNAL(timeToProtectPeople()), this, SLOT(protectPeople()));
+	connect(this, SIGNAL(timeToSeer()), this, SLOT(seeID()));
+	connect(this, SIGNAL(timeToWolves()), this, SLOT(killPerson()));
+	connect(this, SIGNAL(timeToSavePerson()), this, SLOT(savePerson()));
+	connect(this, SIGNAL(timeToPoisonPerson()), this, SLOT(poisonPerson()));
+	connect(this, SIGNAL(timeToTheDead()), this, SLOT(deadAbility()));
+	connect(this, SIGNAL(timeToVote()), this, SLOT(vote()));
 }
 
 void Wolves::changeBackground1()
