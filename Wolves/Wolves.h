@@ -26,6 +26,7 @@ class Wolves : public QMainWindow
 
 public:
     Wolves(QWidget *parent = Q_NULLPTR);
+	~Wolves();
 
 private:
     Ui::WolvesClass ui;

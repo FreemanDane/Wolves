@@ -155,7 +155,8 @@ void Wolves::receiveInfo()
 						ui.infoLabel->setText(u8"你没有被设置为情侣\r\n等待预言家验身份");
 					}
 					pro->timeGoOn();
-					if (pro->getTime() == 1)
+					showPlayer();
+					if (pro->getTime() == 2)
 						emit timeToSetLover();
 					else
 						emit timeToSeer();
@@ -179,38 +180,23 @@ void Wolves::receiveInfo()
 					{
 						p[number_info].id->beProtected();
 					}
+					showPlayer();
 					pro->timeGoOn();
 					ui.infoLabel->setText(u8"狼人杀人中");
 					emit timeToWolves();
 				}
 				else if (pro->getTime() == 2)
 				{
-					if (number_info != -1)
+					if (number_info != -1 && !p[number_info].id->getProtection())
 					{
 						p[number_info].id->BeHurted();
 					}
+					showPlayer();
 					pro->timeGoOn();
 					ui.infoLabel->setText(u8"女巫用药中");
 					emit timeToSavePerson();
 				}
 				else if (pro->getTime() == 3)
-				{
-					if (number_info != -1)
-					{
-						p[number_info].id->BeHurted();
-						for (int i = 0; i < connectNumber; ++i)
-						{
-							if (p[i].id->getID() == id_witch)
-							{
-								p[i].id->usePoison();
-								break;
-							}
-						}
-						pro->timeGoOn();
-						emit timeToPoisonPerson();
-					}
-				}
-				else if (pro->getTime() == 4)
 				{
 					if (number_info != -1)
 					{
@@ -223,6 +209,25 @@ void Wolves::receiveInfo()
 								break;
 							}
 						}
+					}
+					showPlayer();
+					pro->timeGoOn();
+					emit timeToPoisonPerson();
+				}
+				else if (pro->getTime() == 4)
+				{
+					if (number_info != -1)
+					{
+						p[number_info].id->BeHurted();
+						for (int i = 0; i < connectNumber; ++i)
+						{
+							if (p[i].id->getID() == id_witch)
+							{
+								p[i].id->usePoison();
+								break;
+							}
+						}
+						showPlayer();
 						pro->timeGoOn();
 						emit timeToTheDead();
 					}
@@ -245,6 +250,7 @@ void Wolves::receiveInfo()
 					showPlayer();
 					deadList += u8"请投票";
 					ui.infoLabel->setText(deadList);
+					showPlayer();
 					pro->timeGoOn();
 					emit timeToVote();
 				}
@@ -257,7 +263,13 @@ void Wolves::receiveInfo()
 					if (selfNumber == number_info)
 						ui.situLabel->setText(u8"死亡");
 					ui.infoLabel->setText(p[number_info].name + u8"被投死\r\n等待预言家验身份");
+					showPlayer();
 					pro->timeGoOn();
+					if (examGameOver())
+					{
+						gameOver();
+						return;
+					}
 					emit timeToSeer();
 				}
 			}
@@ -279,6 +291,8 @@ void Wolves::showPlayer()
 	{
 		for (int i = 0; i < connectNumber; ++i)
 		{
+			if (p[i].id == nullptr)
+				break;
 			if (p[i].id->beDead())
 				a += u8"死 ";
 			else
@@ -347,6 +361,11 @@ void Wolves::wolvesChatSend()
 void Wolves::sendKeyInfo()
 {
 	int result = voteDialog->getChosen();
+	if (result == -1)
+	{
+		selfSocket->write("\\v-1");
+		return;
+	}
 	if (pro->getTime() == 6)
 	{
 		selfSocket->write((QString("\\k") + QString::number(selfNumber) + ' ' + QString::number(result)).toUtf8());
@@ -357,14 +376,14 @@ void Wolves::sendKeyInfo()
 		{
 			selfSocket->write(QByteArray("\\o") + QString::number(result).toUtf8());
 			selfSocket->waitForReadyRead(1000);
-			selfSocket->write("v-1");
+			selfSocket->write("\\v-1");
 			p[selfNumber].id->cancelOfficer();
 		}
 		else
 		{
 			selfSocket->write(QByteArray("\\g") + QString::number(result).toUtf8());
 			selfSocket->waitForReadyRead(1000);
-			selfSocket->write("v-1");
+			selfSocket->write("\\v-1");
 		}
 	}
 	else if (pro->getTime() == 0 && pro->getDay() != 0)
@@ -372,7 +391,7 @@ void Wolves::sendKeyInfo()
 		int result = voteDialog->getChosen();
 		if (result == -1)
 		{
-			selfSocket->write("\\e-1");
+			selfSocket->write("\\v-1");
 			return;
 		}
 		QString a = QString::number(result + 1) + u8"号玩家\r\n";
@@ -401,12 +420,10 @@ void Wolves::sendKeyInfo()
 			break;
 		}
 		ui.situLabel->setText(a);
-		selfSocket->write("v-1");
+		selfSocket->write("\\v-1");
 	}
 	else
-	{
 		selfSocket->write((QString("\\v") + QString::number(result)).toUtf8());
-	}
 	voteDialog->hide();
 	voteDialog->forbidden();
 }

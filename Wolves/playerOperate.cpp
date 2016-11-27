@@ -75,6 +75,7 @@ void Wolves::killPerson()
 	else
 	{
 		voteDialog->forbidden();
+		voteDialog->canGiveUp(true);
 		for (int i = 0; i < connectNumber; ++i)
 		{
 			if (!p[i].id->beDead())
@@ -92,6 +93,7 @@ void Wolves::savePerson()
 	}
 	else
 	{
+		voteDialog->canGiveUp(true);
 		voteDialog->forbidden();
 		for (int i = 0; i < connectNumber; ++i)
 		{
@@ -164,11 +166,6 @@ void Wolves::deadAbility()
 
 void Wolves::seeID()
 {
-	if (examGameOver())
-	{
-		gameOver();
-		return;
-	}
 	if (p[selfNumber].id->getID() != id_seer)
 	{
 		selfSocket->write("\\v-1");

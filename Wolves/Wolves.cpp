@@ -65,6 +65,11 @@ Wolves::Wolves(QWidget *parent)
 	connect(this, SIGNAL(timeToVote()), this, SLOT(vote()));
 }
 
+Wolves::~Wolves()
+{
+	delete server;
+}
+
 void Wolves::changeBackground1()
 {
 	ui.label->setPixmap(QPixmap(":/Wolves/bg1.png"));
