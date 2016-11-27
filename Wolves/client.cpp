@@ -210,6 +210,18 @@ void Wolves::receiveInfo()
 								break;
 							}
 						}
+						if (p[selfNumber].id->getID() == id_witch)
+						{
+							QString a = u8"´æ»î\r\n";
+							if (p[selfNumber].id->getPoison())
+								a += u8"¶¾Ò©:ÊÇ\r\n";
+							else
+								a += u8"¶¾Ò©:·ñ\r\n";
+							if (p[selfNumber].id->getMedicion())
+								a += u8"½âÒ©:ÊÇ\r\n";
+							else
+								a += u8"½âÒ©:·ñ\r\n";
+						}
 					}
 					showPlayer();
 					pro->timeGoOn();

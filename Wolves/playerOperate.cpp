@@ -127,8 +127,8 @@ void Wolves::poisonPerson()
 
 void Wolves::deadAbility()
 {
-	if (p[selfNumber].id->getLife() > 0 || !p[selfNumber].id->beDead() || (p[selfNumber].id->getID() != id_hunter &&
-		!p[selfNumber].id->getLover() && !p[selfNumber].id->getOfficer()))
+	if (p[selfNumber].id->getLife() > 0 || p[selfNumber].id->beDead() || (p[selfNumber].id->getID() != id_hunter
+		&& !p[selfNumber].id->getLover() && !p[selfNumber].id->getOfficer()))
 		selfSocket->write("\\v-1");
 	if (p[selfNumber].id->getID() == id_hunter)
 	{
