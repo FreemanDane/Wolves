@@ -30,6 +30,7 @@ void Wolves::setLover()
 
 void Wolves::protectPeople()
 {
+	voteDialog->forbidden();
 	if (p[selfNumber].id->getID() != id_guard)
 	{
 		selfSocket->write("\\v-1");
@@ -116,7 +117,7 @@ void Wolves::poisonPerson()
 		voteDialog->forbidden();
 		for (int i = 0; i < connectNumber; ++i)
 		{
-			if (p[i].id->getLife() > 0 && !p[selfNumber].id->beDead() && p[selfNumber].id->getMedicion())
+			if (p[i].id->getLife() > 0 && !p[selfNumber].id->beDead() && p[selfNumber].id->getPoison())
 				voteDialog->setUsabel(i);
 		}
 		voteDialog->show();
@@ -127,9 +128,9 @@ void Wolves::poisonPerson()
 void Wolves::deadAbility()
 {
 	if (p[selfNumber].id->getLife() > 0 || !p[selfNumber].id->beDead() || (p[selfNumber].id->getID() != id_hunter &&
-		!p[selfNumber].id->getLover() && p[selfNumber].id->getOfficer()))
+		!p[selfNumber].id->getLover() && !p[selfNumber].id->getOfficer()))
 		selfSocket->write("\\v-1");
-	else if (p[selfNumber].id->getID() == id_hunter)
+	if (p[selfNumber].id->getID() == id_hunter)
 	{
 		voteDialog->forbidden();
 		for (int i = 0; i < connectNumber; ++i)

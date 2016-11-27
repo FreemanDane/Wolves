@@ -118,7 +118,8 @@ void Wolves::receiveInfo()
 		{
 			new_info.remove(0, 1);
 			int index = new_info.toInt();
-			p[index].id->setOfficer();
+			if (index > 0)
+				p[index].id->setOfficer();
 			showPlayer();
 		}
 		else if (new_info[0] == 'e')
@@ -227,10 +228,10 @@ void Wolves::receiveInfo()
 								break;
 							}
 						}
-						showPlayer();
-						pro->timeGoOn();
-						emit timeToTheDead();
 					}
+					showPlayer();
+					pro->timeGoOn();
+					emit timeToTheDead();
 				}
 				else if (pro->getTime() == 5)
 				{
@@ -374,7 +375,7 @@ void Wolves::sendKeyInfo()
 	{
 		if (p[selfNumber].id->getOfficer())
 		{
-			selfSocket->write(QByteArray("\\o") + QString::number(result).toUtf8());
+			selfSocket->write((QByteArray("\\o") + QString::number(result)).toUtf8());
 			selfSocket->waitForReadyRead(1000);
 			selfSocket->write("\\v-1");
 			p[selfNumber].id->cancelOfficer();
