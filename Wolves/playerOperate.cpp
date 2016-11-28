@@ -130,7 +130,7 @@ void Wolves::deadAbility()
 	if (p[selfNumber].id->getLife() > 0 || p[selfNumber].id->beDead() || (p[selfNumber].id->getID() != id_hunter
 		&& !p[selfNumber].id->getLover() && !p[selfNumber].id->getOfficer()))
 		selfSocket->write("\\v-1");
-	if (p[selfNumber].id->getID() == id_hunter)
+	if (p[selfNumber].id->getID() == id_hunter && p[selfNumber].id->getLife() <= 0 && !p[selfNumber].id->beDead())
 	{
 		voteDialog->forbidden();
 		for (int i = 0; i < connectNumber; ++i)
@@ -141,7 +141,7 @@ void Wolves::deadAbility()
 		ui.situLabel->setText(u8"您死了\r\n选择射击对象");
 		voteDialog->show();
 	}
-	if (p[selfNumber].id->getLover())
+	if (p[selfNumber].id->getLover() && p[selfNumber].id->getLife() <= 0 && !p[selfNumber].id->beDead())
 	{
 		for (int i = 0; i < connectNumber; ++i)
 		{
@@ -152,7 +152,7 @@ void Wolves::deadAbility()
 			}
 		}
 	}
-	if (p[selfNumber].id->getOfficer())
+	if (p[selfNumber].id->getOfficer() && p[selfNumber].id->getLife() <= 0 && !p[selfNumber].id->beDead())
 	{
 		voteDialog->forbidden();
 		for (int i = 0; i < connectNumber; ++i)

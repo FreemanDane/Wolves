@@ -109,7 +109,7 @@ void Wolves::showAuthorInfo()
 void Wolves::showVersionInfo()
 {
 	QMessageBox::information(this, QString(u8"∞Ê±æ–≈œ¢"),
-		QString(u8"tool:Qt\r\nlanguage:c++\r\nversion:1.0\r\nlast version:null\r\nchange:null\r\nAll Rights Reserved"));
+		QString(u8"tool:Qt\r\nlanguage:c++\r\nversion:1.1\r\nlast version:1.0\r\nchange:debug the police and \r\nthe lovers will die in the first \r\nday\r\nAll Rights Reserved"));
 }
 
 void Wolves::callCommonChat()

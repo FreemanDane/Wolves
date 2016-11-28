@@ -221,6 +221,7 @@ void Wolves::receiveInfo()
 								a += u8"解药:是\r\n";
 							else
 								a += u8"解药:否\r\n";
+							ui.situLabel->setText(a);
 						}
 					}
 					showPlayer();
@@ -243,6 +244,7 @@ void Wolves::receiveInfo()
 					}
 					showPlayer();
 					pro->timeGoOn();
+					ui.infoLabel->setText(u8"死亡处理中");
 					emit timeToTheDead();
 				}
 				else if (pro->getTime() == 5)
