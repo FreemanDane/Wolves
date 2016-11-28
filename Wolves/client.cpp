@@ -266,6 +266,11 @@ void Wolves::receiveInfo()
 					deadList += u8"请投票";
 					ui.infoLabel->setText(deadList);
 					showPlayer();
+					if (examGameOver())
+					{
+						gameOver();
+						return;
+					}
 					pro->timeGoOn();
 					emit timeToVote();
 				}
@@ -277,7 +282,10 @@ void Wolves::receiveInfo()
 					}
 					if (selfNumber == number_info)
 						ui.situLabel->setText(u8"死亡");
-					ui.infoLabel->setText(p[number_info].name + u8"被投死\r\n等待预言家验身份");
+					if (number_info != -1)
+						ui.infoLabel->setText(p[number_info].name + u8"被投死\r\n等待预言家验身份");
+					else
+						ui.infoLabel->setText(u8"没有人被投死\r\n等待预言家验身份");
 					showPlayer();
 					pro->timeGoOn();
 					if (examGameOver())
